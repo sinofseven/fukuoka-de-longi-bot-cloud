@@ -1,0 +1,45 @@
+version: 2
+
+jobs:
+  deploy:
+    environment:
+      AWS_DEFAULT_REGION: ap-northeast-1
+    docker:
+      - image: circleci/python:3.8.1
+    steps:
+      - run:
+          name: poetry in-project true
+          command: |
+            set -x
+
+            poetry config virtualenvs.in-project true
+      - checkout
+      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - fukuoka-de-longi-bot-no-dev-poetry-{{ checksum "pyproject.toml" }}-{{ checksum "poetry.lock" }}
+      - run:
+          name: install dependencies
+          command: |
+            set -x
+
+            poetry install
+      - save_cache:
+          paths:
+            - .venv
+          key: fukuoka-de-longi-bot-no-dev-poetry-{{ checksum "pyproject.toml" }}-{{ checksum "poetry.lock" }}
+      - run:
+          name: deploy
+          command: |
+            set -x
+
+            make deploy
+
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              only: master

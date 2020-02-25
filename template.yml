@@ -1,0 +1,12 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: tmp
+
+Resources:
+  ResourcesStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: src/resources/template.yml
+
+Outputs:
+  AlertSNSTopicArn:
+    Value: !GetAtt ResourcesStack.Outputs.AlertSNSTopicArn

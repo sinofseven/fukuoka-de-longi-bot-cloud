@@ -1,0 +1,94 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  FunctionName:
+    Type: String
+
+  RetentionInDays:
+    Type: Number
+    Default: 14
+
+  AlartSnsTopicArn:
+    Type: String
+
+Resources:
+  FunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${FunctionName}
+      RetentionInDays: 14
+
+  ErrorMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      FilterPattern: "error_message"
+      LogGroupName: !Ref FunctionLogGroup
+      MetricTransformations:
+        - MetricName: !Ref FunctionName
+          MetricNamespace: LambdaErrors
+          MetricValue: "1"
+
+  ErrorAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ErrorAlarm-${FunctionName}
+      ActionsEnabled: true
+      MetricName: !Ref FunctionName
+      Namespace: LambdaErrors
+      Statistic: Sum
+      Period: 60
+      EvaluationPeriods: 1
+      Threshold: 1.0
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      AlarmActions:
+        - !Ref AlartSnsTopicArn
+
+  TimeoutMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      FilterPattern: "Task timed out after"
+      LogGroupName: !Ref FunctionLogGroup
+      MetricTransformations:
+        - MetricName: !Ref FunctionName
+          MetricNamespace: LambdaTimeouts
+          MetricValue: "1"
+
+  TimeoutAlart:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub TimeoutAlarm-${FunctionName}
+      ActionsEnabled: true
+      MetricName: !Ref FunctionName
+      Namespace: LambdaTimeouts
+      Statistic: Sum
+      Period: 60
+      EvaluationPeriods: 1
+      Threshold: 1.0
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      AlarmActions:
+        - !Ref AlartSnsTopicArn
+
+  AbortMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      FilterPattern: "Process exited before completing request"
+      LogGroupName: !Ref FunctionLogGroup
+      MetricTransformations:
+        - MetricName: !Ref FunctionName
+          MetricNamespace: LambdaAborts
+          MetricValue: "1"
+
+  AbortAlart:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub AbortAlarm-${FunctionName}
+      ActionsEnabled: true
+      MetricName: !Ref FunctionName
+      Namespace: LambdaAborts
+      Statistic: Sum
+      Period: 60
+      EvaluationPeriods: 1
+      Threshold: 1.0
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      AlarmActions:
+        - !Ref AlartSnsTopicArn
