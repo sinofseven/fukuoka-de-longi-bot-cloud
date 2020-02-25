@@ -17,7 +17,7 @@ lint:
 package:
 	rm -rf dist/
 	mkdir dist/
-	poetry run sam package --s3-bucket $$SAM_ARTIFACT_BUCKET --output-template-file $(template_path) --template-file sam.yml
+	poetry run sam package --s3-bucket $$SAM_ARTIFACT_BUCKET --output-template-file $(template_path) --template-file template.yml
 
 deploy: package
 	poetry run sam deploy \

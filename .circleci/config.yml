@@ -14,7 +14,6 @@ jobs:
 
             poetry config virtualenvs.in-project true
       - checkout
-      - setup_remote_docker
       - restore_cache:
           keys:
             - fukuoka-de-longi-bot-no-dev-poetry-{{ checksum "pyproject.toml" }}-{{ checksum "poetry.lock" }}
@@ -34,6 +33,9 @@ jobs:
             set -x
 
             make deploy
+      - store_artifacts:
+           path: dist/packaged.yml
+
 
 workflows:
   version: 2
