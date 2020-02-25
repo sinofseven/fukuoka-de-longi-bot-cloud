@@ -23,7 +23,7 @@ deploy: package
 	poetry run sam deploy \
 		--stack-name $(stack_name) \
 		--template-file $(template_path) \
-		--capabilities CAPABILITY_IAM \
+		--capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
 		--role-arn $$CLOUDFORMATION_DEPLOY_ROLE_ARN \
 		--no-fail-on-empty-changeset
 	poetry run aws cloudformation describe-stacks \
