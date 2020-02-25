@@ -1,11 +1,37 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: tmp
 
+Parameters:
+  Env:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /FukuokaDeLongiBot/Application/Env
+
+  TargetChannelId:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /FukuokaDeLongiBot/Application/TargetChannelId
+
+  LoggerLayerArn:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /FukuokaDeLongiBot/Layer/LoggerLayerArn
+
+  SlackClientLayerArn:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /FukuokaDeLongiBot/Layer/SlackClientLayerArn
+
 Resources:
   ResourcesStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: src/resources/template.yml
+
+  ButtonFunctionStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: src/button_function/sam.yml
+      Parameters:
+        Env: !Ref Env
+        LoggerLayerArn: !Ref LoggerLayerArn
+        AlertSnsTopicArn: !GetAtt ResourcesStack.Outputs.AlertSNSTopicArn
 
 Outputs:
   AlertSNSTopicArn:

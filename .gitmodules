@@ -1,0 +1,4 @@
+[submodule "submodules/fukuoka-de-longi-bot-layer"]
+	path = submodules/fukuoka-de-longi-bot-layer
+	url = git@github.com:sinofseven/fukuoka-de-longi-bot-layer.git
+	branch = master
