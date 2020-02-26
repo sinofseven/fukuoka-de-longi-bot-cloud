@@ -5,6 +5,18 @@ Resources:
   AlertSNSTopic:
     Type: AWS::SNS::Topic
 
+  OpenSackFlowSNSTopic:
+    Type: AWS::SNS::Topic
+
+  MakeCoffeeFlowSNSTopic:
+    Type: AWS::SNS::Topic
+
 Outputs:
   AlertSNSTopicArn:
     Value: !Ref AlertSNSTopic
+
+  OpenSackFlowSNSTopicArn:
+    Value: !Ref OpenSackFlowSNSTopic
+
+  MakeCoffeeFlowSNSTopicArn:
+    Value: !Ref MakeCoffeeFlowSNSTopic

@@ -11,6 +11,12 @@ Parameters:
   AlertSnsTopicArn:
     Type: String
 
+  OpenSackFlowSNSTopicArn:
+    Type: String
+
+  MakeCoffeeFlowSNSTopicArn:
+    Type: String
+
 Resources:
   IoTButtonFunction:
     Type: AWS::Serverless::Function
@@ -24,6 +30,10 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonSNSFullAccess
       Layers:
         - !Ref LoggerLayerArn
+      Environment:
+        Variables:
+          OPEN_SACK_FLOW_SNS_TOPIC_ARN: !Ref OpenSackFlowSNSTopicArn
+          MAKE_COFFEE_FLOW_SNS_TOPIC_ARN: !Ref MakeCoffeeFlowSNSTopicArn
 
   IoTButtonLogStack:
     Type: AWS::CloudFormation::Stack

@@ -32,6 +32,8 @@ Resources:
         Env: !Ref Env
         LoggerLayerArn: !Ref LoggerLayerArn
         AlertSnsTopicArn: !GetAtt ResourcesStack.Outputs.AlertSNSTopicArn
+        OpenSackFlowSNSTopicArn: !GetAtt ResourcesStack.Outputs.OpenSackFlowSNSTopicArn
+        MakeCoffeeFlowSNSTopicArn: !GetAtt ResourcesStack.Outputs.MakeCoffeeFlowSNSTopicArn
 
 Outputs:
   AlertSNSTopicArn:
