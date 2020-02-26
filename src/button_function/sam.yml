@@ -34,6 +34,15 @@ Resources:
         FunctionName: !Ref IoTButtonFunction
         AlartSnsTopicArn: !Ref AlertSnsTopicArn
 
+  ButtonProject:
+    Type: AWS::IoT1Click::Project
+    Properties:
+      PlacementTemplate:
+        DeviceTemplates:
+          ButtonLambda:
+            deviceType: button
+            callbackOverrides: !Ref IoTButtonFunction.Alias
+
 Outputs:
   IoTButtonFunctionName:
     Value: !Ref IoTButtonFunction
