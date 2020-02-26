@@ -41,7 +41,8 @@ Resources:
         DeviceTemplates:
           ButtonLambda:
             DeviceType: button
-            CallbackOverrides: !Ref IoTButtonFunction.Alias
+            CallbackOverrides:
+              onClickCallback: !Ref IoTButtonFunction.Alias
 
 Outputs:
   IoTButtonFunctionName:
