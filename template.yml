@@ -36,3 +36,6 @@ Resources:
 Outputs:
   AlertSNSTopicArn:
     Value: !GetAtt ResourcesStack.Outputs.AlertSNSTopicArn
+
+  IoTButtonFunctionName:
+    Value: !GetAtt ButtonFunctionStack.Outputs.IoTButtonFunctionName

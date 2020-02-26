@@ -33,17 +33,6 @@ Resources:
         FunctionName: !Ref IoTButtonFunction
         AlartSnsTopicArn: !Ref AlertSnsTopicArn
 
-  ButtonProject:
-    Type: AWS::IoT1Click::Project
-    Properties:
-      ProjectName: FukuokaDeLongiBot
-      PlacementTemplate:
-        DeviceTemplates:
-          myTemplateName:
-            DeviceType: button
-            CallbackOverrides:
-              onClickCallback: !GetAtt IoTButtonFunction.Arn
-
 Outputs:
   IoTButtonFunctionName:
     Value: !Ref IoTButtonFunction
