@@ -42,7 +42,7 @@ Resources:
           ButtonLambda:
             DeviceType: button
             CallbackOverrides:
-              onClickCallback: !Ref IoTButtonFunction.Alias
+              onClickCallback: !GetAtt IoTButtonFunction.Alias
 
 Outputs:
   IoTButtonFunctionName:
