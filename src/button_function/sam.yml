@@ -36,6 +36,7 @@ Resources:
   ButtonProject:
     Type: AWS::IoT1Click::Project
     Properties:
+      ProjectName: fukuoka-de-longi-bot
       PlacementTemplate:
         DeviceTemplates:
           ButtonLambda:
