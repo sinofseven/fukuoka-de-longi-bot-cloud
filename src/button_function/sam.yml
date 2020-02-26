@@ -39,7 +39,7 @@ Resources:
       ProjectName: fukuoka-de-longi-bot
       PlacementTemplate:
         DeviceTemplates:
-          ButtonLambda:
+          myTemplateName:
             DeviceType: button
             CallbackOverrides:
               onClickCallback: !GetAtt IoTButtonFunction.Arn
