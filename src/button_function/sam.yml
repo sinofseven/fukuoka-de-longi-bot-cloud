@@ -40,8 +40,8 @@ Resources:
       PlacementTemplate:
         DeviceTemplates:
           ButtonLambda:
-            deviceType: button
-            callbackOverrides: !Ref IoTButtonFunction.Alias
+            DeviceType: button
+            CallbackOverrides: !Ref IoTButtonFunction.Alias
 
 Outputs:
   IoTButtonFunctionName:
