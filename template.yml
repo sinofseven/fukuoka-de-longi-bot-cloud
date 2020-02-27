@@ -35,6 +35,17 @@ Resources:
         OpenSackFlowSNSTopicArn: !GetAtt ResourcesStack.Outputs.OpenSackFlowSNSTopicArn
         MakeCoffeeFlowSNSTopicArn: !GetAtt ResourcesStack.Outputs.MakeCoffeeFlowSNSTopicArn
 
+  MakeCoffeeFlowStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: src/make_coffee_flow/sam.yml
+      Parameters:
+        Env: !Ref Env
+        LoggerLayerArn: !Ref LoggerLayerArn
+        SlackClientLayerArn: !Ref SlackClientLayerArn
+        AlertSnsTopicArn: !GetAtt ResourcesStack.Outputs.AlertSNSTopicArn
+        MakeCoffeeFlowSNSTopicArn: !GetAtt ResourcesStack.Outputs.MakeCoffeeFlowSNSTopicArn
+
 Outputs:
   AlertSNSTopicArn:
     Value: !GetAtt ResourcesStack.Outputs.AlertSNSTopicArn

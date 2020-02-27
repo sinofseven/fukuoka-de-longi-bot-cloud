@@ -1,0 +1,81 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  Env:
+    Type: String
+
+  LoggerLayerArn:
+    Type: String
+
+  SlackClientLayerArn:
+    Type: String
+
+  AlertSnsTopicArn:
+    Type: String
+
+  MakeCoffeeFlowSNSTopicArn:
+    Type: String
+
+Globals:
+  Function:
+    Handler: index.handler
+    Runtime: python3.7
+    Timeout: 150
+    MemorySize: 256
+    AutoPublishAlias: !Ref Env
+    Layers:
+      - !Ref LoggerLayerArn
+
+Resources:
+  FirstIncrementSackCounterFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: 1st_increment_sack_counter
+      Policies:
+        - arn:aws:iam::aws:policy/AWSLambdaFullAccess
+      Events:
+        SNSTrigger:
+          Type: SNS
+          Properties:
+            Topic: !Ref MakeCoffeeFlowSNSTopicArn
+
+  FirstIncrementSackCounterLogStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ../log_group.yml
+      Parameters:
+        FunctionName: !Ref FirstIncrementSackCounterFunction
+        AlartSnsTopicArn: !Ref AlertSnsTopicArn
+
+  SecondSendSlackMessageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: 2nd_send_slack_message
+      Policies:
+        - arn:aws:iam::aws:policy/AWSLambdaFullAccess
+      Layers:
+        - !Ref SlackClientLayerArn
+
+  SecondSendSlackMessageLogStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ../log_group.yml
+      Parameters:
+        FunctionName: !Ref SecondSendSlackMessageFunction
+        AlartSnsTopicArn: !Ref AlertSnsTopicArn
+
+  ThirdSaveMessageInfoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: 3rd_save_message_info
+      Policies:
+        - arn:aws:iam::aws:policy/AWSLambdaFullAccess
+
+  ThirdSaveMessageInfoLogStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ../log_group.yml
+      Parameters:
+        FunctionName: !Ref ThirdSaveMessageInfoLogStack
+        AlartSnsTopicArn: !Ref AlertSnsTopicArn

@@ -1,0 +1,51 @@
+description:
+  - テーブル定義(使い方)を記述する
+  - 1つのテーブルにすべてのデータを押し込む
+    - partitionIdとsortIdで区別できるようにする
+schema:
+  SackCounter:
+    description:
+      - 一袋でどれだけ飲んでいるかを記録するためのカウンター
+      - 新しい袋をあけた段階で0に戻る
+    definition:
+      partitionId: sackCounter # [str][required] 固定値
+      sortId: counter # [str][required] 固定値
+    item:
+      partitionId: sack # [str][required] 固定値
+      sortId: counter # [str][required] 固定値
+      times: 0 # [int][required] 飲んだ回数
+  SackHistory:
+    description:
+      - 一袋でどれだけ飲んだかの履歴
+      - 記録の日付は次の袋を開けた日付
+    definition:
+      partitionId: sackHistory # [str][required] 固定
+      sortId: "2020-02-21 12:55:50.808455+09:00" # [str][required] 次の袋を開けた日付(JST)。PythonのDatetimeを文字列化したもの。
+    item:
+      partitionhId: sackHistory # [str][required] 固定
+      sortId: "2020-02-21 12:55:50.808455+09:00" # [str][required] 次の袋を開けた日付(JST)。PythonのDatetimeを文字列化したもの。
+      times: 32 # [int][required] 飲んだ回数
+  UserDrinkHistory:
+    description:
+      - 誰が何月に何杯飲んだかの記録
+      - 新しいデータはupsertで作成
+    definition:
+      partitionId: userDrink # [str][required] 固定
+      sortId: "2020年03月" # [str][required] 何月かを示す
+    item:
+      partitionId: userDrink # [str][required] 固定
+      sortId: "2020年03月" # [str][required] 何月かを示す
+      ${UserId}_times: 0 # [int] 飲んだ回数を示す。Attributeの"UserId"はSlackのユーザーID。
+      ${UserId}_name: "夏目" # [str] 飲んだ人の名前を示す。times更新時に同時に更新する。Attributeの"UserId"はSlackのユーザーID。
+  MakeHistory:
+    description:
+      - いつ飲んだかの履歴
+      - slackのAPIに特定のメッセージそのものを取得する機能がないから、ここに格納する
+    definition:
+      partitionId: makeHistory # [str] 固定
+      sortId: "1503435956.000247" # [str] slackのts (メッセージの識別子)
+    item:
+      partitionId: makeHistory # [str] 固定
+      sortId: "1503435956.000247" # [str] slackのts (メッセージの識別子)
+      isSingle: true # [bool] 1杯入れたのか2杯いれたのか
+      isDetected: false # [boo]
