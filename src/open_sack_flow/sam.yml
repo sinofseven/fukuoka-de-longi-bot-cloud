@@ -1,0 +1,150 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  Env:
+    Type: String
+
+  LoggerLayerArn:
+    Type: String
+
+  SlackClientLayerArn:
+    Type: String
+
+  AlertSnsTopicArn:
+    Type: String
+
+  OpenSackFlowSNSTopicArn:
+    Type: String
+
+Globals:
+  Function:
+    Handler: index.handler
+    Runtime: python3.7
+    Timeout: 150
+    MemorySize: 256
+    AutoPublishAlias: !Ref Env
+    Layers:
+      - !Ref LoggerLayerArn
+
+Resources:
+  FirstSendMessageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: 1st_send_message
+      Policies:
+        - arn:aws:iam::aws:policy/AWSLambdaFullAccess
+      EventInvokeConfig:
+        DestinationConfig:
+          OnSuccess:
+            Destination: !Ref SecondGetSackCounterFunction.Alias
+            Type: Lambda
+      Layers:
+        - !Ref SlackClientLayerArn
+      Events:
+        SNSTrigger:
+          Type: SNS
+          Properties:
+            Topic: !Ref OpenSackFlowSNSTopicArn
+
+
+  FirstSendMessageLogStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ../log_group.yml
+      Parameters:
+        FunctionName: !Ref FirstSendMessageFunction
+        AlartSnsTopicArn: !Ref AlertSnsTopicArn
+
+  SecondGetSackCounterFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: 2nd_get_sack_counter
+      Policies:
+        - arn:aws:iam::aws:policy/AWSLambdaFullAccess
+      EventInvokeConfig:
+        DestinationConfig:
+          OnSuccess:
+            Destination: !Ref ThirdClearSackCounterFunction.Alias
+            Type: Lambda
+
+  SecondGetSackCounterLogStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ../log_group.yml
+      Parameters:
+        FunctionName: !Ref SecondGetSackCounterFunction
+        AlartSnsTopicArn: !Ref AlertSnsTopicArn
+
+  ThirdClearSackCounterFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: 3rd_clear_sack_counter
+      Policies:
+        - arn:aws:iam::aws:policy/AWSLambdaFullAccess
+      EventInvokeConfig:
+        DestinationConfig:
+          OnSuccess:
+            Destination: !Ref FourthInsertSackHistoryFunction.Alias
+            Type: Lambda
+
+  ThirdClearSackCounterLogStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ../log_group.yml
+      Parameters:
+        FunctionName: !Ref ThirdClearSackCounterFunction
+        AlartSnsTopicArn: !Ref AlertSnsTopicArn
+
+  FourthInsertSackHistoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: 4th_insert_sack_history
+      Policies:
+        - arn:aws:iam::aws:policy/AWSLambdaFullAccess
+      EventInvokeConfig:
+        DestinationConfig:
+          OnSuccess:
+            Destination: !Ref FifthSendSackHistoryFunction.Alias
+            Type: Lambda
+
+  FourthInsertSackHistoryLogStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ../log_group.yml
+      Parameters:
+        FunctionName: !Ref FourthInsertSackHistoryFunction
+        AlartSnsTopicArn: !Ref AlertSnsTopicArn
+
+  FifthSendSackHistoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: 5th_send_sack_history
+      Policies:
+        - arn:aws:iam::aws:policy/AmazonSNSFullAccess
+      Layers:
+        - !Ref SlackClientLayerArn
+      EventInvokeConfig:
+        DestinationConfig:
+          OnSuccess:
+            Destination: !Ref TestSnsTopic
+            Type: SNS
+
+
+  FifthSendSackHistoryLogStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ../log_group.yml
+      Parameters:
+        FunctionName: !Ref FifthSendSackHistoryFunction
+        AlartSnsTopicArn: !Ref AlertSnsTopicArn
+
+  TestSnsTopic:
+    Type: AWS::SNS::Topic
+
+  TestSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: email-json
+      TopicArn: !Ref TestSnsTopic
+      Endpoint: natsume.yuta+open-sack-flow@classmethod.jp
