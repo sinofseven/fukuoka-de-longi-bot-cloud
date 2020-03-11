@@ -14,6 +14,7 @@ schema:
       partitionId: sack # [str][required] 固定値
       sortId: counter # [str][required] 固定値
       times: 0 # [int][required] 飲んだ回数
+      updatedAt: 1234567890 # [int][required] 更新日時。ミリ秒単位のUNIXTIME。UTC。
   SackHistory:
     description:
       - 一袋でどれだけ飲んだかの履歴

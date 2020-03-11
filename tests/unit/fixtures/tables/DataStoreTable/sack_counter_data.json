@@ -1,0 +1,8 @@
+[
+  {
+    "partitionId": "sackCounter",
+    "sortId": "counter",
+    "times": 32,
+    "updatedAt": 1234567890123
+  }
+]

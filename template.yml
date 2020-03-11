@@ -45,6 +45,7 @@ Resources:
         SlackClientLayerArn: !Ref SlackClientLayerArn
         AlertSnsTopicArn: !GetAtt ResourcesStack.Outputs.AlertSNSTopicArn
         MakeCoffeeFlowSNSTopicArn: !GetAtt ResourcesStack.Outputs.MakeCoffeeFlowSNSTopicArn
+        DataStoreTableName: !GetAtt ResourcesStack.Outputs.DataStoreTableName
 
   OpenSackFlowStack:
     Type: AWS::CloudFormation::Stack

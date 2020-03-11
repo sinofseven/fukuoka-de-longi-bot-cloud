@@ -11,6 +11,21 @@ Resources:
   MakeCoffeeFlowSNSTopic:
     Type: AWS::SNS::Topic
 
+  DataStoreTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: partitionId
+          AttributeType: S
+        - AttributeName: sortId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: partitionId
+          KeyType: HASH
+        - AttributeName: sortId
+          KeyType: RANGE
+
 Outputs:
   AlertSNSTopicArn:
     Value: !Ref AlertSNSTopic
@@ -20,3 +35,6 @@ Outputs:
 
   MakeCoffeeFlowSNSTopicArn:
     Value: !Ref MakeCoffeeFlowSNSTopic
+
+  DataStoreTableName:
+    Value: !Ref DataStoreTable

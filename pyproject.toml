@@ -33,7 +33,10 @@ aws-sam-cli = "^0.43.0"
 [tool.poetry.dev-dependencies]
 isort = {extras = ["pyproject"], version = "^4.3.21"}
 black = "^19.10b0"
-flake8 = {extras = ["pyproject"], version = "^3.7.9"}
+pytest = "^5.3.5"
+pytest-cov = "^2.8.1"
+flake8 = "^3.7.9"
+flake8-isort = "^2.8.0"
 
 [build-system]
 requires = ["poetry>=0.12"]

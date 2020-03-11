@@ -17,6 +17,9 @@ Parameters:
   MakeCoffeeFlowSNSTopicArn:
     Type: String
 
+  DataStoreTableName:
+    Type: String
+
 Globals:
   Function:
     Handler: index.handler
@@ -34,6 +37,10 @@ Resources:
       CodeUri: 1st_increment_sack_counter
       Policies:
         - arn:aws:iam::aws:policy/AWSLambdaFullAccess
+        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          DATA_STORE_TABLE_NAME: !Ref DataStoreTableName
       EventInvokeConfig:
         DestinationConfig:
           OnSuccess:
