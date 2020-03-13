@@ -30,7 +30,7 @@ def get_table_name():
 def update_sack_counter(amount: int, table_name: str, dynamodb_resource: ServiceResource) -> int:
     table = dynamodb_resource.Table(table_name)
     option = {
-        "Key": {"partitionId": "sackCounter", "sortId": "counter",},
+        "Key": {"partitionId": "sackCounter", "sortId": "counter"},
         "UpdateExpression": "add #times :amount set #updatedAt = :updatedAt",
         "ExpressionAttributeNames": {"#times": "times", "#updatedAt": "updatedAt"},
         "ExpressionAttributeValues": {
