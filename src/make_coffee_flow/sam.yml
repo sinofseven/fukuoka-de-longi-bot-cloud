@@ -68,15 +68,13 @@ Resources:
       Policies:
         - arn:aws:iam::aws:policy/AWSLambdaFullAccess
         - arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess
-        - PolicyName: KMSAdminPolicy
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - kms:Decrypt
-                Resource:
-                  - "*"
+        - Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action:
+                - kms:Decrypt
+              Resource:
+                - "*"
 
       Layers:
         - !Ref SlackClientLayerArn
