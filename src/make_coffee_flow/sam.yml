@@ -75,10 +75,8 @@ Resources:
                 - kms:Decrypt
               Resource:
                 - "*"
-
       Layers:
         - !Ref SlackClientLayerArn
-        - arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess
       EventInvokeConfig:
         DestinationConfig:
           OnSuccess:
