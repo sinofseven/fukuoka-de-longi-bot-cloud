@@ -43,10 +43,13 @@ schema:
       - いつ飲んだかの履歴
       - slackのAPIに特定のメッセージそのものを取得する機能がないから、ここに格納する
     definition:
-      partitionId: makeHistory # [str] 固定
-      sortId: "1503435956.000247" # [str] slackのts (メッセージの識別子)
+      partitionId: makeHistory # [str][required] 固定
+      sortId: "1503435956.000247" # [str][required] slackのts (メッセージの識別子)
     item:
-      partitionId: makeHistory # [str] 固定
-      sortId: "1503435956.000247" # [str] slackのts (メッセージの識別子)
-      isSingle: true # [bool] 1杯入れたのか2杯いれたのか
-      isDetected: false # [boo]
+      partitionId: makeHistory # [str][required] 固定
+      sortId: "1503435956.000247" # [str][required] slackのts (メッセージの識別子)
+      isSingle: true # [bool][required] 1杯入れたのか2杯いれたのか
+      isDetected: true # [boo][required] 誰が飲んだのか特定済みか否か
+      createdAt: 1234567890 # [int][required] 作成日時。ミリ秒単位のUNIXTIME。UTC。
+      updatedAt: 1234567890 # [int][required] 更新日時。ミリ秒単位のUNIXTIME。UTC。
+      ${UserId}_name: "夏目" # [str] 飲んだ人の名前を示す

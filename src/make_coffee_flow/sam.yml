@@ -96,12 +96,10 @@ Resources:
     Properties:
       CodeUri: 3rd_save_message_info
       Policies:
-        - arn:aws:iam::aws:policy/AmazonSNSFullAccess
-      EventInvokeConfig:
-        DestinationConfig:
-          OnSuccess:
-            Destination: !Ref TestSnsTopic
-            Type: SNS
+        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          DATA_STORE_TABLE_NAME: !Ref DataStoreTableName
 
   ThirdSaveMessageInfoLogStack:
     Type: AWS::CloudFormation::Stack
@@ -110,13 +108,3 @@ Resources:
       Parameters:
         FunctionName: !Ref ThirdSaveMessageInfoFunction
         AlartSnsTopicArn: !Ref AlertSnsTopicArn
-
-  TestSnsTopic:
-    Type: AWS::SNS::Topic
-
-  TestSubscription:
-    Type: AWS::SNS::Subscription
-    Properties:
-      Protocol: email-json
-      TopicArn: !Ref TestSnsTopic
-      Endpoint: natsume.yuta+make-coffee-flow@classmethod.jp
