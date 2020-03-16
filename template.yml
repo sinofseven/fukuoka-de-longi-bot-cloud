@@ -57,6 +57,7 @@ Resources:
         SlackClientLayerArn: !Ref SlackClientLayerArn
         AlertSnsTopicArn: !GetAtt ResourcesStack.Outputs.AlertSNSTopicArn
         OpenSackFlowSNSTopicArn: !GetAtt ResourcesStack.Outputs.OpenSackFlowSNSTopicArn
+        DataStoreTableName: !GetAtt ResourcesStack.Outputs.DataStoreTableName
 
 Outputs:
   AlertSNSTopicArn:

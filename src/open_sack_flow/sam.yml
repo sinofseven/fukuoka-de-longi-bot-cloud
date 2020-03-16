@@ -17,6 +17,9 @@ Parameters:
   OpenSackFlowSNSTopicArn:
     Type: String
 
+  DataStoreTableName:
+    Type: String
+
 Globals:
   Function:
     Handler: index.handler
