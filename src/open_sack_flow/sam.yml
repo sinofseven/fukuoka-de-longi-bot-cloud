@@ -80,6 +80,11 @@ Resources:
       Environment:
         Variables:
           DATA_STORE_TABLE_NAME: !Ref DataStoreTableName
+      EventInvokeConfig:
+        DestinationConfig:
+          OnSuccess:
+            Destination: !Ref ThirdInsertSackHistoryFunction.Alias
+            Type: Lambda
 
   SecondResetSackCounterLogStack:
     Type: AWS::CloudFormation::Stack
@@ -87,4 +92,23 @@ Resources:
       TemplateURL: ../log_group.yml
       Parameters:
         FunctionName: !Ref SecondResetSackCounterFunction
+        AlartSnsTopicArn: !Ref AlertSnsTopicArn
+
+  ThirdInsertSackHistoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: 3rd_insert_sack_history
+      Policies:
+        - arn:aws:iam::aws:policy/AWSLambdaFullAccess
+        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          DATA_STORE_TABLE_NAME: !Ref DataStoreTableName
+
+  ThirdInsertSackHistoryLogStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ../log_group.yml
+      Parameters:
+        FunctionName: !Ref ThirdInsertSackHistoryFunction
         AlartSnsTopicArn: !Ref AlertSnsTopicArn
