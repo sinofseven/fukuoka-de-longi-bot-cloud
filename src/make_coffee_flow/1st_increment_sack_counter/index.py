@@ -16,7 +16,7 @@ def main(event: dict, dynamodb_resource: ServiceResource = boto3.resource("dynam
     table_name = get_table_name()
     amount = 2 if is_double(event) else 1
     current_times = update_sack_counter(amount, table_name, dynamodb_resource)
-    return {"current_times": current_times, "amount": amount}
+    return {"current_times": int(current_times), "amount": amount}
 
 
 def is_double(event: dict) -> bool:
