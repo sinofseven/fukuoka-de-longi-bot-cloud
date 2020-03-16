@@ -35,6 +35,7 @@ Resources:
       Policies:
         - arn:aws:iam::aws:policy/AWSLambdaFullAccess
         - arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess
+        - arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess
         - Version: 2012-10-17
           Statement:
             - Effect: Allow
@@ -42,6 +43,9 @@ Resources:
                 - kms:Decrypt
               Resource:
                 - "*"
+      Environment:
+        Variables:
+          DATA_STORE_TABLE_NAME: !Ref DataStoreTableName
       Layers:
         - !Ref SlackClientLayerArn
       Events:
