@@ -56,7 +56,11 @@ Resources:
           Type: SNS
           Properties:
             Topic: !Ref OpenSackFlowSNSTopicArn
-
+      EventInvokeConfig:
+        DestinationConfig:
+          OnSuccess:
+            Destination: !Ref SecondResetSackCounterFunction.Alias
+            Type: Lambda
 
   FirstSendMessageLogStack:
     Type: AWS::CloudFormation::Stack
@@ -64,4 +68,23 @@ Resources:
       TemplateURL: ../log_group.yml
       Parameters:
         FunctionName: !Ref FirstSendMessageFunction
+        AlartSnsTopicArn: !Ref AlertSnsTopicArn
+
+  SecondResetSackCounterFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: 2nd_reset_sack_counter
+      Policies:
+        - arn:aws:iam::aws:policy/AWSLambdaFullAccess
+        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          DATA_STORE_TABLE_NAME: !Ref DataStoreTableName
+
+  SecondResetSackCounterLogStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ../log_group.yml
+      Parameters:
+        FunctionName: !Ref SecondResetSackCounterFunction
         AlartSnsTopicArn: !Ref AlertSnsTopicArn
