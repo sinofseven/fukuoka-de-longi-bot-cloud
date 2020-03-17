@@ -1,0 +1,45 @@
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  Env:
+    Type: String
+
+  LoggerLayerArn:
+    Type: String
+
+  AlertSnsTopicArn:
+    Type: String
+
+Resources:
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: !Ref Env
+
+  ReactionHookFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: reaction
+      Handler: index.handler
+      Runtime: python3.7
+      Timeout: 30
+      MemorySize: 256
+      AutoPublishAlias: !Ref Env
+      Layers:
+        - !Ref LoggerLayerArn
+      Events:
+        HttpApi:
+          Type: HttpApi
+          Properties:
+            Path: /reaction
+            Method: POST
+            ApiId: !Ref HttpApi
+
+  ReactionHookLogStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ../log_group.yml
+      Parameters:
+        FunctionName: !Ref ReactionHookFunction
+        AlartSnsTopicArn: !Ref AlertSnsTopicArn
+
