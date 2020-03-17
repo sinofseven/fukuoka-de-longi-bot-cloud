@@ -28,6 +28,9 @@ Resources:
       Timeout: 30
       MemorySize: 256
       AutoPublishAlias: !Ref Env
+      Policies:
+        - arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess
+        - arn:aws:iam::aws:policy/AmazonSNSFullAccess
       Environment:
         Variables:
           SNS_TOPIC_ARN: !Ref ReactionFlowSnsTopicArn
