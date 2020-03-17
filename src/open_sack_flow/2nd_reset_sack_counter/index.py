@@ -18,7 +18,7 @@ def handler(event, context):
 def main(event: dict, dynamodb_resource: ServiceResource = boto3.resource("dynamodb")) -> dict:
     table_name = get_table_name()
     reset_sack_counter(table_name, dynamodb_resource)
-    return event
+    return create_result(event)
 
 
 def get_table_name():
@@ -35,3 +35,7 @@ def reset_sack_counter(table_name: str, dynamodb_resource: ServiceResource) -> N
     }
     resp = table.update_item(**option)
     logger.info("reset sack counter result", resp=resp)
+
+
+def create_result(event: dict) -> dict:
+    return event["responsePayload"]
