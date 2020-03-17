@@ -43,3 +43,6 @@ Resources:
         FunctionName: !Ref ReactionHookFunction
         AlartSnsTopicArn: !Ref AlertSnsTopicArn
 
+Outputs:
+  ReactionHookApiUrl:
+    value: !Sub https://${HttpApi}.execute-api.${AWS:Region}.amazonaws.com/current/reaction
