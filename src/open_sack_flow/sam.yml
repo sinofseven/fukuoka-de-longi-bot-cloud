@@ -112,3 +112,31 @@ Resources:
       Parameters:
         FunctionName: !Ref ThirdInsertSackHistoryFunction
         AlartSnsTopicArn: !Ref AlertSnsTopicArn
+
+  ForthSendSackHistoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: 4th_send_sack_history
+      Policies:
+        - arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess
+        - arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess
+        - Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action:
+                - kms:Decrypt
+              Resource:
+                - "*"
+      Layers:
+        - !Ref SlackClientLayerArn
+      Environment:
+        Variables:
+          DATA_STORE_TABLE_NAME: !Ref DataStoreTableName
+
+  ForthSendSackHistoryLogStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ../log_group.yml
+      Parameters:
+        FunctionName: !Ref ForthSendSackHistoryFunction
+        AlartSnsTopicArn: !Ref AlertSnsTopicArn
