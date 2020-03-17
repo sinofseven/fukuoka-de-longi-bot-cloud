@@ -65,6 +65,8 @@ def create_post_message_option(sack_history: List[dict], slack_config: dict) -> 
     return {
         "username": slack_config["SendHistoryUserName"].format(now),
         "text": "\n".join(["```"] + [f'{x["sortId"]}: {x["times"]}' for x in sack_history] + ["```"]),
+        "channel": slack_config['Channel'],
+        "icon_emoji": slack_config["IconEmoji"]
     }
 
 
