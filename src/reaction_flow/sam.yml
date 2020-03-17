@@ -1,0 +1,56 @@
+Transform: AWS::Serverless-2016-10-31
+Parameters:
+  Env:
+    Type: String
+
+  LoggerLayerArn:
+    Type: String
+
+  SlackClientLayerArn:
+    Type: String
+
+  AlertSnsTopicArn:
+    Type: String
+
+  ReactionFlowSNSTopicArn:
+    Type: String
+
+  DataStoreTableName:
+    Type: String
+
+Globals:
+  Function:
+    Handler: index.handler
+    Runtime: python3.7
+    Timeout: 150
+    MemorySize: 256
+    AutoPublishAlias: !Ref Env
+    Layers:
+      - !Ref LoggerLayerArn
+
+Resources:
+  FirstUpdateMakeHistoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: 1st_update_make_history
+      Policies:
+        - arn:aws:iam::aws:policy/AWSLambdaFullAccess
+        - arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess
+        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+        - Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action:
+                - kms:Decrypt
+              Resource:
+                - "*"
+      Environment:
+        Variables:
+          DATA_STORE_TABLE_NAME: !Ref DataStoreTableName
+      Layers:
+        - !Ref SlackClientLayerArn
+      Events:
+        SNSTrigger:
+          Type: SNS
+          Properties:
+            Topic: !Ref ReactionFlowSNSTopicArn

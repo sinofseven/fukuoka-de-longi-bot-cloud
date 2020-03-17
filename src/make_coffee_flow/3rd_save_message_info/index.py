@@ -34,7 +34,7 @@ def create_make_history_item(amount: int, ts: str, times: int) -> dict:
         "partitionId": "makeHistory",
         "sortId": ts,
         "times": times,
-        "isSingle": amount == 1,
+        "amount": amount,
         "createdAt": timestamp,
         "updatedAt": timestamp,
         "isDetected": False,

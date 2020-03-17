@@ -69,6 +69,18 @@ Resources:
         AlertSnsTopicArn: !GetAtt ResourcesStack.Outputs.AlertSNSTopicArn
         ReactionFlowSnsTopicArn: !GetAtt ResourcesStack.Outputs.ReactionFlowSNSTopicArn
 
+  ReactionFlowStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: src/reaction_flow/sam.yml
+      Parameters:
+        Env: !Ref Env
+        LoggerLayerArn: !Ref LoggerLayerArn
+        SlackClientLayerArn: !Ref SlackClientLayerArn
+        AlertSnsTopicArn: !GetAtt ResourcesStack.Outputs.AlertSNSTopicArn
+        ReactionFlowSNSTopicArn: !GetAtt ResourcesStack.Outputs.ReactionFlowSNSTopicArn
+        DataStoreTableName: !GetAtt ResourcesStack.Outputs.DataStoreTableName
+
 Outputs:
   AlertSNSTopicArn:
     Value: !GetAtt ResourcesStack.Outputs.AlertSNSTopicArn
