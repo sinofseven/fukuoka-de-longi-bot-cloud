@@ -10,6 +10,9 @@ Parameters:
   AlertSnsTopicArn:
     Type: String
 
+  ReactionFlowSnsTopicArn:
+    Type: String
+
 Resources:
   HttpApi:
     Type: AWS::Serverless::HttpApi
@@ -25,6 +28,9 @@ Resources:
       Timeout: 30
       MemorySize: 256
       AutoPublishAlias: !Ref Env
+      Environment:
+        Variables:
+          SNS_TOPIC_ARN: !Ref ReactionFlowSnsTopicArn
       Layers:
         - !Ref LoggerLayerArn
       Events:
@@ -45,4 +51,4 @@ Resources:
 
 Outputs:
   ReactionHookApiUrl:
-    value: !Sub https://${HttpApi}.execute-api.${AWS:Region}.amazonaws.com/current/reaction
+    Value: !Sub https://${HttpApi}.execute-api.${AWS:Region}.amazonaws.com/current/reaction

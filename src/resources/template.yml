@@ -11,6 +11,9 @@ Resources:
   MakeCoffeeFlowSNSTopic:
     Type: AWS::SNS::Topic
 
+  ReactionFlowSNSTopic:
+    Type: AWS::SNS::Topic
+
   DataStoreTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -35,6 +38,9 @@ Outputs:
 
   MakeCoffeeFlowSNSTopicArn:
     Value: !Ref MakeCoffeeFlowSNSTopic
+
+  ReactionFlowSNSTopicArn:
+    Value: !Ref ReactionFlowSNSTopic
 
   DataStoreTableName:
     Value: !Ref DataStoreTable

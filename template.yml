@@ -67,6 +67,7 @@ Resources:
         Env: !Ref Env
         LoggerLayerArn: !Ref LoggerLayerArn
         AlertSnsTopicArn: !GetAtt ResourcesStack.Outputs.AlertSNSTopicArn
+        ReactionFlowSnsTopicArn: !GetAtt ResourcesStack.Outputs.ReactionFlowSNSTopicArn
 
 Outputs:
   AlertSNSTopicArn:
