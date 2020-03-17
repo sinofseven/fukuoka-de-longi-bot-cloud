@@ -17,22 +17,23 @@ def handler(event, context):
 
 
 def main(event: dict, dynamodb_resource: ServiceResource = boto3.resource("dynamodb")):
-    amount, ts = parse_pre_function_result(event)
+    amount, ts, times = parse_pre_function_result(event)
     table_name = get_table_name()
-    item = create_make_history_item(amount, ts)
+    item = create_make_history_item(amount, ts, times)
     put_make_history_item(item, table_name, dynamodb_resource)
 
 
-def parse_pre_function_result(event: dict) -> Tuple[int, str]:
+def parse_pre_function_result(event: dict) -> Tuple[int, str, int]:
     response = event["responsePayload"]
-    return response["amount"], response["ts"]
+    return response["amount"], response["ts"], response["times"]
 
 
-def create_make_history_item(amount: int, ts: str) -> dict:
+def create_make_history_item(amount: int, ts: str, times: int) -> dict:
     timestamp = int(datetime.now(timezone.utc).timestamp() * 1000)
     return {
         "partitionId": "makeHistory",
         "sortId": ts,
+        "times": times,
         "isSingle": amount == 1,
         "createdAt": timestamp,
         "updatedAt": timestamp,
