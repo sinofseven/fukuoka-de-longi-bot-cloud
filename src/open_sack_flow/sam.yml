@@ -104,6 +104,11 @@ Resources:
       Environment:
         Variables:
           DATA_STORE_TABLE_NAME: !Ref DataStoreTableName
+      EventInvokeConfig:
+        DestinationConfig:
+          OnSuccess:
+            Destination: !Ref ForthSendSackHistoryFunction.Alias
+            Type: Lambda
 
   ThirdInsertSackHistoryLogStack:
     Type: AWS::CloudFormation::Stack
