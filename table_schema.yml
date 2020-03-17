@@ -48,6 +48,7 @@ schema:
     item:
       partitionId: makeHistory # [str][required] 固定
       sortId: "1503435956.000247" # [str][required] slackのts (メッセージの識別子)
+      times: 21 # [int][required] このときの作った回数
       isSingle: true # [bool][required] 1杯入れたのか2杯いれたのか
       isDetected: true # [boo][required] 誰が飲んだのか特定済みか否か
       createdAt: 1234567890 # [int][required] 作成日時。ミリ秒単位のUNIXTIME。UTC。

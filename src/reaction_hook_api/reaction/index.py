@@ -1,14 +1,16 @@
 import json
+import os
+
+import boto3
+from botocore.client import BaseClient
+
 from logger.decorator import lambda_auto_logging
 from logger.my_logger import MyLogger
-from botocore.client import BaseClient
-import os
-import boto3
 
 logger = MyLogger(__name__)
 
 
-@lambda_auto_logging('SNS_TOPIC_ARN')
+@lambda_auto_logging("SNS_TOPIC_ARN")
 def handler(event, context):
     try:
         main(event)
@@ -19,17 +21,15 @@ def handler(event, context):
 
 def create_result(event: dict) -> dict:
     return {
-        'statusCode': 200,
-        'header': {
-            'Content-Type': 'application/json'
-        },
-        'body': json.dumps({
-            'challenge': json.loads(event['body']).get('challenge')
-        })
+        "statusCode": 200,
+        "header": {"Content-Type": "application/json"},
+        "body": json.dumps({"challenge": json.loads(event["body"]).get("challenge")}),
     }
 
 
-def main(event: dict, ssm_client: BaseClient = boto3.client('ssm'), sns_client: BaseClient = boto3.client('sns')) -> None:
+def main(
+    event: dict, ssm_client: BaseClient = boto3.client("ssm"), sns_client: BaseClient = boto3.client("sns")
+) -> None:
     target_channel_id = get_target_channel_id(ssm_client)
     if has_target_id(event, target_channel_id):
         topic_arn = get_sns_topic_arn()
@@ -37,28 +37,23 @@ def main(event: dict, ssm_client: BaseClient = boto3.client('ssm'), sns_client: 
 
 
 def get_target_channel_id(ssm_client: BaseClient) -> str:
-    option = {
-        'Name': '/FukuokaDeLongiBot/Application/TargetChannelId'
-    }
+    option = {"Name": "/FukuokaDeLongiBot/Application/TargetChannelId"}
     resp = ssm_client.get_parameter(**option)
 
-    logger.info('get target channel id result', option=option, response=resp)
+    logger.info("get target channel id result", option=option, response=resp)
 
-    return resp['Parameter']['Value']
+    return resp["Parameter"]["Value"]
 
 
 def has_target_id(event: dict, target_channel_id: str) -> bool:
-    return event['body'].find(f'"channel":"{target_channel_id}"') > 0
+    return event["body"].find(f'"channel":"{target_channel_id}"') > 0
 
 
 def get_sns_topic_arn() -> str:
-    return os.environ['SNS_TOPIC_ARN']
+    return os.environ["SNS_TOPIC_ARN"]
 
 
 def send_message(event: dict, sns_topic_arn: str, sns_client: BaseClient) -> None:
-    option = {
-        'TopicArn': sns_topic_arn,
-        'Message': event['body']
-    }
+    option = {"TopicArn": sns_topic_arn, "Message": event["body"]}
     resp = sns_client.publish(**option)
-    logger.info('send message result', option=option, response=resp)
+    logger.info("send message result", option=option, response=resp)

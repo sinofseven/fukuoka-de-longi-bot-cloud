@@ -26,7 +26,7 @@ def main(event: dict, ssm_client: BaseClient = boto3.client("ssm")) -> dict:
     ts = post_message(option_post_message, slack_client)
     logger.info("ts", ts=ts)
 
-    result = create_result(ts, amount)
+    result = create_result(ts, amount, current_times)
     return result
 
 
@@ -65,5 +65,5 @@ def post_message(option: dict, client: WebClient) -> str:
     return resp.data["ts"]
 
 
-def create_result(ts: str, amount: int) -> dict:
-    return {"ts": ts, "amount": amount}
+def create_result(ts: str, amount: int, times: int) -> dict:
+    return {"ts": ts, "amount": amount, "times": times}
