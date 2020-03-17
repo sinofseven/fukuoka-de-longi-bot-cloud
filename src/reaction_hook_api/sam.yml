@@ -51,4 +51,4 @@ Resources:
 
 Outputs:
   ReactionHookApiUrl:
-    Value: !Sub https://${HttpApi}.execute-api.${AWS:Region}.amazonaws.com/current/reaction
+    Value: !Sub https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/current/reaction
