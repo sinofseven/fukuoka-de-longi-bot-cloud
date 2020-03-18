@@ -78,6 +78,11 @@ Resources:
       Environment:
         Variables:
           DATA_STORE_TABLE_NAME: !Ref DataStoreTableName
+      EventInvokeConfig:
+        DestinationConfig:
+          OnSuccess:
+            Destination: !Ref ThirdUpdateSlackMessageFunction.Alias
+            Type: Lambda
 
   SecondUpsertUserMakeHistoryLogStack:
     Type: AWS::CloudFormation::Stack
@@ -85,4 +90,28 @@ Resources:
       TemplateURL: ../log_group.yml
       Parameters:
         FunctionName: !Ref SecondUpsertUserMakeHistoryFunction
+        AlartSnsTopicArn: !Ref AlertSnsTopicArn
+
+  ThirdUpdateSlackMessageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: 3rd_update_slack_message
+      Policies:
+        - arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess
+        - Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action:
+                - kms:Decrypt
+              Resource:
+                - "*"
+      Layers:
+        - !Ref SlackClientLayerArn
+
+  ThirdUpdateSlackMessageLogStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ../log_group.yml
+      Parameters:
+        FunctionName: !Ref ThirdUpdateSlackMessageFunction
         AlartSnsTopicArn: !Ref AlertSnsTopicArn
