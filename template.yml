@@ -59,10 +59,10 @@ Resources:
         OpenSackFlowSNSTopicArn: !GetAtt ResourcesStack.Outputs.OpenSackFlowSNSTopicArn
         DataStoreTableName: !GetAtt ResourcesStack.Outputs.DataStoreTableName
 
-  ReactionHookApiStack:
+  HookApiStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: src/reaction_hook_api/sam.yml
+      TemplateURL: src/hook_api/sam.yml
       Parameters:
         Env: !Ref Env
         LoggerLayerArn: !Ref LoggerLayerArn
