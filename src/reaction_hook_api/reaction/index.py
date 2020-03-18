@@ -37,7 +37,7 @@ def main(
 
 
 def get_target_channel_id(ssm_client: BaseClient) -> str:
-    option = {"Name": "/FukuokaDeLongiBot/Application/TargetChannelId"}
+    option = {"Name": "/FukuokaDeLongiBot/Slack/Channel"}
     resp = ssm_client.get_parameter(**option)
 
     logger.info("get target channel id result", option=option, response=resp)
