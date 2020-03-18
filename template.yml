@@ -93,6 +93,16 @@ Resources:
         ShowMakeTimesSnsTopicArn: !GetAtt ResourcesStack.Outputs.ShowMakeTimesSNSTopicArn
         DataStoreTableName: !GetAtt ResourcesStack.Outputs.DataStoreTableName
 
+  CronFunctionsStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: src/cron_functions/sam.yml
+      Parameters:
+        Env: !Ref Env
+        LoggerLayerArn: !Ref LoggerLayerArn
+        AlertSnsTopicArn: !GetAtt ResourcesStack.Outputs.AlertSNSTopicArn
+        ShowMakeTimesSnsTopicArn: !GetAtt ResourcesStack.Outputs.ShowMakeTimesSNSTopicArn
+
 Outputs:
   AlertSNSTopicArn:
     Value: !GetAtt ResourcesStack.Outputs.AlertSNSTopicArn
