@@ -23,7 +23,7 @@ def main(sns_client: BaseClient = boto3.client("sns")) -> None:
 
 def get_pre_month() -> str:
     jst = timezone(offset=timedelta(hours=+9), name="jst")
-    now = (datetime.now(jst) - timedelta(days=5)).strftime("%Y年%m月")
+    now = (datetime.now(jst) - timedelta(days=5)).strftime("%Y-%m")
     return now
 
 
