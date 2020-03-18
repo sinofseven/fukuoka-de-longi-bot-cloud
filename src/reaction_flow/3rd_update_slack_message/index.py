@@ -16,10 +16,10 @@ def handler(event, context):
 
 
 def main(event: dict, ssm_client: BaseClient = boto3.client("ssm")):
-    user_name, ts, amount, sack_times, _ = parse_event(event)
+    user_name, ts, amount, sack_times, user_times = parse_event(event)
     slack_config = get_slack_config(ssm_client)
     slack_client = get_slack_client(slack_config)
-    option_update_message = create_update_message_option(user_name, ts, amount, sack_times, slack_config)
+    option_update_message = create_update_message_option(user_name, ts, amount, sack_times, user_times, slack_config)
     update_message(option_update_message, slack_client)
 
 
@@ -44,11 +44,15 @@ def get_slack_client(slack_config: dict) -> WebClient:
     return WebClient(token=slack_config["SlackBotToken"])
 
 
-def create_update_message_option(user_name: str, ts: str, amount: int, sack_times: int, slack_config: dict) -> dict:
+def create_update_message_option(
+    user_name: str, ts: str, amount: int, sack_times: int, user_times: int, slack_config: dict
+) -> dict:
     return {
         "channel": slack_config["Channel"],
         "ts": ts,
-        "text": slack_config["ReactionMessage"].format(slack_config["CoffeeEmoji"] * amount, sack_times, user_name),
+        "text": slack_config["ReactionMessage"].format(
+            slack_config["CoffeeEmoji"] * amount, sack_times, user_name, user_times
+        ),
     }
 
 
