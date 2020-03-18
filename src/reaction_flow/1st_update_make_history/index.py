@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from typing import Tuple
 
 import boto3
-from boto3.dynamodb.conditions import Key
+from boto3.dynamodb.conditions import Attr, Key
 from boto3.resources.base import ServiceResource
 from botocore.client import BaseClient
 from botocore.exceptions import ClientError
@@ -89,12 +89,19 @@ def update_make_history(
     partition_id = "makeHistory"
     option = {
         "Key": {"partitionId": partition_id, "sortId": ts},
-        "ConditionExpression": Key("partitionId").eq(partition_id) & Key("sortId").eq(ts),
-        "UpdateExpression": "set #updatedAt = :updatedAt, #userName = :userName",
-        "ExpressionAttributeNames": {"#updatedAt": "updatedAt", "#userName": f"{user_id}_name"},
+        "ConditionExpression": Key("partitionId").eq(partition_id)
+        & Key("sortId").eq(ts)
+        & Attr("isDetected").eq(False),
+        "UpdateExpression": "set #updatedAt = :updatedAt, #userName = :userName, #isDetected = :isDetected",
+        "ExpressionAttributeNames": {
+            "#updatedAt": "updatedAt",
+            "#userName": f"{user_id}_name",
+            "#isDetected": "isDetected",
+        },
         "ExpressionAttributeValues": {
             ":updatedAt": int(datetime.now(timezone.utc).timestamp() * 1000),
             ":userName": user_name,
+            ":isDetected": True,
         },
         "ReturnValues": "ALL_NEW",
     }
