@@ -89,4 +89,4 @@ Outputs:
     Value: !GetAtt ButtonFunctionStack.Outputs.IoTButtonFunctionName
 
   ReactionHookApiUrl:
-    Value: !GetAtt ReactionHookApiStack.Outputs.ReactionHookApiUrl
+    Value: !GetAtt HookApiStack.Outputs.ReactionHookUrl
