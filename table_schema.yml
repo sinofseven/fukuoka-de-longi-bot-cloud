@@ -26,16 +26,17 @@ schema:
       partitionhId: sackHistory # [str][required] 固定
       sortId: "2020-02-21 12:55:50.808455+09:00" # [str][required] 次の袋を開けた日付(JST)。PythonのDatetimeを文字列化したもの。
       times: 32 # [int][required] 飲んだ回数
-  UserDrinkHistory:
+  UserMakeHistory:
     description:
       - 誰が何月に何杯飲んだかの記録
       - 新しいデータはupsertで作成
     definition:
-      partitionId: userDrink # [str][required] 固定
+      partitionId: userMakeHistory # [str][required] 固定
       sortId: "2020年03月" # [str][required] 何月かを示す
     item:
-      partitionId: userDrink # [str][required] 固定
+      partitionId: userMakeHistory # [str][required] 固定
       sortId: "2020年03月" # [str][required] 何月かを示す
+      updatedAt: 1234567890 # [int][required] 最終更新日時。ミリ秒単位のUNIXTIME。UTC。
       ${UserId}_times: 0 # [int] 飲んだ回数を示す。Attributeの"UserId"はSlackのユーザーID。
       ${UserId}_name: "夏目" # [str] 飲んだ人の名前を示す。times更新時に同時に更新する。Attributeの"UserId"はSlackのユーザーID。
   MakeHistory:

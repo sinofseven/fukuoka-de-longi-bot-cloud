@@ -54,3 +54,35 @@ Resources:
           Type: SNS
           Properties:
             Topic: !Ref ReactionFlowSNSTopicArn
+      EventInvokeConfig:
+        DestinationConfig:
+          OnSuccess:
+            Destination: !Ref SecondUpsertUserMakeHistoryFunction.Alias
+            Type: Lambda
+
+  FirstUpdateMakeHistoryLogStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ../log_group.yml
+      Parameters:
+        FunctionName: !Ref FirstUpdateMakeHistoryFunction
+        AlartSnsTopicArn: !Ref AlertSnsTopicArn
+
+  SecondUpsertUserMakeHistoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: 2nd_upsert_user_make_history
+      Policies:
+        - arn:aws:iam::aws:policy/AWSLambdaFullAccess
+        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          DATA_STORE_TABLE_NAME: !Ref DataStoreTableName
+
+  SecondUpsertUserMakeHistoryLogStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ../log_group.yml
+      Parameters:
+        FunctionName: !Ref SecondUpsertUserMakeHistoryFunction
+        AlartSnsTopicArn: !Ref AlertSnsTopicArn
