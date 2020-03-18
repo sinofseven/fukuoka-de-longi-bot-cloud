@@ -1,0 +1,60 @@
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  Env:
+    Type: String
+
+  LoggerLayerArn:
+    Type: String
+
+  SlackClientLayerArn:
+    Type: String
+
+  AlertSnsTopicArn:
+    Type: String
+
+  ShowMakeTimesSnsTopicArn:
+    Type: String
+
+  DataStoreTableName:
+    Type: String
+
+Resources:
+  ShowMakeTimesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      CodeUri: show
+      Runtime: python3.7
+      Timeout: 150
+      MemorySize: 256
+      AutoPublishAlias: !Ref Env
+      Policies:
+        - arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess
+        - arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess
+        - Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action:
+                - kms:Decrypt
+              Resource:
+                - "*"
+      Environment:
+        Variables:
+          DATA_STORE_TABLE_NAME: !Ref DataStoreTableName
+      Layers:
+        - !Ref LoggerLayerArn
+        - !Ref SlackClientLayerArn
+      Events:
+        SNSTrigger:
+          Type: SNS
+          Properties:
+            Topic: !Ref ShowMakeTimesSnsTopicArn
+
+  ShowMakeTimesLogStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ../log_group.yml
+      Parameters:
+        FunctionName: !Ref ShowMakeTimesFunction
+        AlartSnsTopicArn: !Ref AlertSnsTopicArn

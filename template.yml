@@ -81,6 +81,18 @@ Resources:
         ReactionFlowSNSTopicArn: !GetAtt ResourcesStack.Outputs.ReactionFlowSNSTopicArn
         DataStoreTableName: !GetAtt ResourcesStack.Outputs.DataStoreTableName
 
+  ShowMakeTimesStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: src/show_make_times/sam.yml
+      Parameters:
+        Env: !Ref Env
+        LoggerLayerArn: !Ref LoggerLayerArn
+        SlackClientLayerArn: !Ref SlackClientLayerArn
+        AlertSnsTopicArn: !GetAtt ResourcesStack.Outputs.AlertSNSTopicArn
+        ShowMakeTimesSnsTopicArn: !GetAtt ResourcesStack.Outputs.ShowMakeTimesSNSTopicArn
+        DataStoreTableName: !GetAtt ResourcesStack.Outputs.DataStoreTableName
+
 Outputs:
   AlertSNSTopicArn:
     Value: !GetAtt ResourcesStack.Outputs.AlertSNSTopicArn

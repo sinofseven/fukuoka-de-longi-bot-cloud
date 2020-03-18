@@ -13,6 +13,9 @@ Resources:
 
   ReactionFlowSNSTopic:
     Type: AWS::SNS::Topic
+    
+  ShowMakeTimesSNSTopic:
+    Type: AWS::SNS::Topic
 
   DataStoreTable:
     Type: AWS::DynamoDB::Table
@@ -41,6 +44,9 @@ Outputs:
 
   ReactionFlowSNSTopicArn:
     Value: !Ref ReactionFlowSNSTopic
+
+  ShowMakeTimesSNSTopicArn:
+    Value: !Ref ShowMakeTimesSNSTopic
 
   DataStoreTableName:
     Value: !Ref DataStoreTable
