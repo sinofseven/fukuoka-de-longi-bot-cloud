@@ -106,7 +106,7 @@ def update_make_history(
         times = resp["Attributes"]["times"]
         amount = resp["Attributes"]["amount"]
 
-        return times, amount
+        return int(times), int(amount)
     except ClientError as e:
         if e.response["Error"]["Code"] == "ConditionalCheckFailedException":
             raise NotTargetError()
