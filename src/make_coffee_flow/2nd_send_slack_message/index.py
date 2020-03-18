@@ -38,11 +38,16 @@ def get_current_times(event: dict) -> int:
     return event["responsePayload"]["current_times"]
 
 
-def get_slack_config(ssm_client: BaseClient) -> dict:
+def get_slack_config(ssm_client: BaseClient, token=None) -> dict:
     prefix = "/FukuokaDeLongiBot/Slack/"
     option = {"Path": prefix, "WithDecryption": True}
+    if token is not None:
+        option["NextToken"] = token
     resp = ssm_client.get_parameters_by_path(**option)
-    return {x["Name"][len(prefix) :]: x["Value"] for x in resp.get("Parameters", [])}
+    result = {x["Name"][len(prefix) :]: x["Value"] for x in resp.get("Parameters", [])}
+    if "NextToken" in resp:
+        result.update(get_slack_config(ssm_client, token=resp["NextToken"]))
+    return result
 
 
 def get_slack_client(slack_config: dict) -> WebClient:
