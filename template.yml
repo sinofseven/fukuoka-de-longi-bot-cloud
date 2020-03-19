@@ -6,10 +6,6 @@ Parameters:
     Type: AWS::SSM::Parameter::Value<String>
     Default: /FukuokaDeLongiBot/Application/Env
 
-  TargetChannelId:
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: /FukuokaDeLongiBot/Application/TargetChannelId
-
   LoggerLayerArn:
     Type: AWS::SSM::Parameter::Value<String>
     Default: /FukuokaDeLongiBot/Layer/LoggerLayerArn
